@@ -136,3 +136,4 @@ $_['error_keyword']           = 'SEO URL must be between 1 and 64 characters!';
 $_['error_keyword_exists']    = 'SEO URL must be unique!';
 $_['error_keyword_character'] = 'Keyword can only use characters a-z, 0-9, - and _!';
 $_['error_required']          = '%s required!';
+$_['txt_error_no_document']='The document does not exist, Please try again';

@@ -3,8 +3,8 @@
 define('APPLICATION', 'Catalog');
 
 // HTTP
-define('HTTP_SERVER', 'http://localhost/sapho/upload/bot/');
-//define('HTTP_SERVER', 'http://192.168.0.14/sapho/upload/bot/');
+//define('HTTP_SERVER', 'http://localhost/sapho/upload/bot/');
+define('HTTP_SERVER', 'http://192.168.0.14/sapho/upload/bot/');
 
 // DIR
 define('DIR_OPENCART', 'C:/xampp/htdocs/sapho/upload/bot/');

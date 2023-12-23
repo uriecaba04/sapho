@@ -56,6 +56,7 @@ class Home extends \Opencart\System\Engine\Controller {
 	}
     public function generatePdfAccount(): void{
 		$this->load->language('owner/account_status');
+		$this->load->language('common/home');
 		$this->load->model('owner/account_status');
 		date_default_timezone_set($this->config->get('date_timezone'));
 
@@ -78,8 +79,12 @@ class Home extends \Opencart\System\Engine\Controller {
 			$this->pdf->generateDocument($data);
 
 			$data_response['ruta_dowload'] = HTTP_SERVER . 'documents/' . $data['name_document'] . '.pdf';
+			$data_response['option']="document";
+			$data_response['txt_new_request']=$this->language->get('txt_new_request');
+			$data_response['txt_new_request_1']=$this->language->get('txt_new_request_1');
+			$data_response['txt_new_request_2']=$this->language->get('txt_new_request_2');
 		}else{
-			$data['error'] = $this->language->get('txt_error_no_document');
+			$data_response['error'] = $this->language->get('txt_error_no_document');
 		}
 		$this->response->setOutput(json_encode($data_response));
 	}
@@ -101,6 +106,19 @@ class Home extends \Opencart\System\Engine\Controller {
 		$data['msg_bye']=$this->language->get('text_bye');
 		$data['current_time']=date('h:i:s A');
 		$data['option']="close";
+		$this->response->setOutput(json_encode($data));
+	}
+
+	public function backHome(): void
+	{
+		$this->load->language('common/home');
+		date_default_timezone_set($this->config->get('date_timezone'));
+		$data=[];
+		$data['current_time']=date('h:i:s A');
+		$data['text_welcome_p4']=$this->language->get('text_welcome_p4');
+		$data['text_welcome_p5']=$this->language->get('text_welcome_p5');;
+		$data['text_welcome_p6']=$this->language->get('text_welcome_p6');
+		$data['option']="home";
 		$this->response->setOutput(json_encode($data));
 	}
 }

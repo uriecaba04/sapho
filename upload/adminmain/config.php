@@ -3,7 +3,8 @@
 define('APPLICATION', 'Admin');
 
 // HTTP
-define('HTTP_SERVER', 'http://localhost/sapho/upload/adminmain/');
+//define('HTTP_SERVER', 'http://localhost/sapho/upload/adminmain/');
+define('HTTP_SERVER', 'http://192.168.0.14/sapho/upload/adminmain/');
 define('HTTP_CATALOG', 'http://localhost/sapho/upload/');
 
 // DIR
@@ -22,6 +23,7 @@ define('DIR_DOWNLOAD', DIR_STORAGE . 'download/');
 define('DIR_LOGS', DIR_STORAGE . 'logs/');
 define('DIR_SESSION', DIR_STORAGE . 'session/');
 define('DIR_UPLOAD', DIR_STORAGE . 'upload/');
+define('DIR_DOCUMENTS', DIR_OPENCART . '/bot/documents/');
 
 // DB
 define('DB_DRIVER', 'mysqli');

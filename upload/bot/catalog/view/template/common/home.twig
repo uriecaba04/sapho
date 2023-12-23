@@ -19,14 +19,9 @@
             </div>
           </div>
             <p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>
-
-
         </fieldset>
-
-
-
-
       </form>
+      <div id="end"></div>
     </div>
 
   </div>
@@ -44,6 +39,9 @@
 </div>
 <script type="text/javascript">
   $('#bt-send').on('click', function() {
+    var $target = $('#content');
+    $target.animate({scrollTop: 3000}, 1000);
+
     var  current_menu=$('#option').val();
     var current_sub_menu=$('#text_msg').val();
     var menu = new Object();
@@ -70,7 +68,12 @@
 
     if(current_menu=="home"){
       menu.home=new Object();
-      menu.home.sub_option_1="getDocument";
+      if(documento_user == '' || documento_user == undefined ){
+        menu.home.sub_option_1="getDocument";
+      }else{
+        menu.home.sub_option_1="generatePdfAccount";
+      }
+
       menu.home.sub_option_2="closeChat";
 
       var current_option_msg='<div class="alinea-icon-avatar">';
@@ -87,7 +90,11 @@
       current_option_msg +='<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
 
       if(current_sub_menu==1) {
-        method=menu.home.sub_option_1;
+        if(documento_user == '' || documento_user == undefined){
+          method=menu.home.sub_option_1;
+        }else{
+          method=menu.home.sub_option_1+"&&user_document="+documento_user;
+        }
       }else if(current_sub_menu==2){
         method=menu.home.sub_option_2;
       }else if(current_sub_menu != 1 || current_sub_menu !=2) {
@@ -103,6 +110,24 @@
       if (documento_user != '') {
         method = menu.getdocument.sub_option_1+"&&user_document="+documento_user;
       }
+    }else if(current_menu=="document"){
+      menu.document = new Object();
+      menu.document.sub_option_1='backHome';
+      menu.document.sub_option_2='closeChat';
+
+      if(current_sub_menu==1) {
+        method=menu.document.sub_option_1;
+      }else if(current_sub_menu==2){
+        method=menu.document.sub_option_2;
+      }else if(current_sub_menu != 1 || current_sub_menu !=2) {
+        method = 'none';
+        $('#account').append(text_not_undertand);
+        $('#account').append(current_option_msg);
+        $('#text_msg').val('');
+      }
+
+    }else{
+      $('#text_msg').val('');
     }
 
     if(method !='' && method !='none') {
@@ -128,9 +153,7 @@
               textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
               $('#account').append(avatar + result.msg_bye + textdate);
             }
-            if(result.option) {
-              $('#option').val(result.option);
-            }
+
         }else if(current_menu == "getdocument"){
             if (result.ruta_dowload) {
               textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
@@ -140,7 +163,50 @@
               link_dowload += '</a>';
               link_dowload += '</div>';
               $('#account').append(avatar + link_dowload + textdate);
+
+              var msg_bot='';
+              msg_bot +='<div class="alinea-div-avatar">';
+              msg_bot +='<div class="border-first"><span class="color-text-bot container-messages-client margin-agent-chat">';
+              msg_bot += '✏️<b>'+ result.txt_new_request+'</b><br>';
+              msg_bot += '  <span>'+result.txt_new_request_1+'</span><br>';
+              msg_bot += '  <span>'+result.txt_new_request_2+'</span>';
+              msg_bot +=' <br>';
+              msg_bot +='  </div>';
+              msg_bot +='</div>';
+              msg_bot +='<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
+              $('#account').append(avatar + msg_bot);
+            }else if(result.error){
+              var msg_bot='';
+              msg_bot +='<div class="alinea-div-avatar">';
+              msg_bot +='<div class="border-first"><span class="color-text-bot container-messages-client margin-agent-chat">';
+              msg_bot +=result.error;
+              msg_bot +='           </span><br>';
+              msg_bot +='  </div>';
+              msg_bot +='</div>';
+              msg_bot +='<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
+              $('#account').append(avatar + msg_bot);
             }
+          }else if(current_menu == "document"){
+            if (result.msg_bye) {
+              textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
+              $('#account').append(avatar + result.msg_bye + textdate);
+            }else if(result.text_welcome_p4){
+              var msg_bot='';
+              msg_bot +='<div class="alinea-div-avatar">';
+              msg_bot +='<div class="border-first"><span class="color-text-bot container-messages-client margin-agent-chat">';
+              msg_bot +=result.text_welcome_p4;
+              msg_bot +='  <br>';
+              msg_bot +="   <span>"+result.text_welcome_p5+"</span><br>";
+              msg_bot +='    <span>'+result.text_welcome_p6+'</span>';
+              msg_bot +='  </div>';
+              msg_bot +='</div>';
+              msg_bot +='<p id="timeBot2" class="text-time text-time-solo">'+result.current_time+'</p>';
+              $('#account').append(avatar + msg_bot);
+            }
+          }
+
+          if(result.option) {
+            $('#option').val(result.option);
           }
       }
       });

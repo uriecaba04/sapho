@@ -20,8 +20,11 @@ class Pdf {
 			$html2pdf = new Html2Pdf('P', 'A4', 'es');
 			$html2pdf->setDefaultFont('Arial');
 			$html2pdf->writeHTML($content);
-			//$html2pdf->output('cuenta_propietario.pdf', 'D');
-			$html2pdf->output(DIR_DOCUMENTS.$data['name_document'].'.pdf', 'F');
+			if(isset($data['option_file'])){
+				$html2pdf->output($data['name_document'].'.pdf', 'D');
+			}else{
+				$html2pdf->output(DIR_DOCUMENTS.$data['name_document'].'.pdf', 'F');
+			}
 		} catch (Html2PdfException $e) {
 			$html2pdf->clean();
 

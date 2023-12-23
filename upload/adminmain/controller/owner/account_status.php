@@ -59,7 +59,7 @@ class AccountStatus extends \Opencart\System\Engine\Controller {
 				'owner_name' => $result['owner_name'],
 				'document_number' => $result['document_number'],
 				'balance' => $this->currency->format($result['balance'], $this->config->get('config_currency')),
-				'dowload' => $this->url->link('owner/account_status.generatePDF', 'user_token=' . $this->session->data['user_token'] )
+				'dowload' => $this->url->link('owner/account_status.generatePDF', 'user_token=' . $this->session->data['user_token'].'&&user_id='.$result['account_id'])
 			];
 		}
 
@@ -70,15 +70,17 @@ class AccountStatus extends \Opencart\System\Engine\Controller {
 	  $this->load->language('owner/account_status');
 	  $this->load->model('owner/account_status');
 	  $filter_data=[];
-	  $owner = $this->model_owner_account_status->getAccount(1);
+	  $owner = $this->model_owner_account_status->getAccount($this->request->get['user_id']);
 
 	  $data=[];
 	  $data['account']['date']= date('d/m/Y');
 	  $data['account']['owner_name']= $owner['owner_name'];
-		$data['account']['owner_name']= $owner['owner_name'];
+	  $data['account']['owner_name']= $owner['owner_name'];
 	  $data['account']['balance']= $this->currency->format($owner['balance'], $this->config->get('config_currency'));
-		$data['account']['document_number']= $owner['document_number'];
+	  $data['account']['document_number']= $owner['document_number'];
 	  $data['content']=$this->load->view('owner/tpl_pdf', $data);
+	  $data['name_document'] = $owner['owner_name'] . $owner['document_number'];
+	  $data['option_file']='D';
 	  $this->pdf->generateDocument($data);
 	}
 

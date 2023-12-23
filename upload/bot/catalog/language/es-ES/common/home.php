@@ -17,5 +17,8 @@ $_['text_bye'] = '<div class="alinea-div-avatar">
                 </div>
             </div>';
 $_['text_request_document']='<div class="alinea-div-avatar">Por favor ingresa tu numero de documento</div>';
-$_['msg_request_document']='Por favor ingrese su documento';
+$_['msg_request_document']='Por favor ingresa tu documento';
 $_['txt_error_no_document']='El documento no existe, por favor intenta nuevamente';
+$_['txt_new_request']='Le podemos ayudar en algo mas?';
+$_['txt_new_request_1']='1:Si';
+$_['txt_new_request_2']='2:No';
