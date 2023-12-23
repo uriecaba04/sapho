@@ -9,7 +9,15 @@
             <div class="alinea-icon-avatar">
                <img id="Bot2" src="{{ imgbot }}" class="icon-agente image-message-agent margin-agent-chat">
             </div>
-            {{ text_welcome }}
+          <div class="alinea-div-avatar">
+            <div class="border-first"><span class="color-text-bot container-messages-client margin-agent-chat">
+                   ✏️ <b>{{text_welcome_p1}}</b> {{text_welcome_p2}}<b> {{text_welcome_p3}}</b> {{text_welcome_p4}}
+                 </span><br>
+              <span>{{text_welcome_p5}}</span><br>
+              <span>{{text_welcome_p6}}</span>
+              <!-- <a class="btn btn-chat-bot btn-chat-bot-act options-register-user btnDesactivado" data-guid-btn="6ee92dbe-cf47-4df2-92cb-57b2f92f73e1" data-title="Tienda" disabled="disabled">Tienda</a> -->
+            </div>
+          </div>
             <p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>
 
 
@@ -30,56 +38,111 @@
 
       <button type="submit" id="bt-send" class="btn btn-primary bt-sent-chat col-2">{{ button_continue }}</button>
       <input type="hidden" name="document_user"  id="document_user" />
+      <input type="hidden" name="option"  id="option"  value="{{ option }}" />
     </div>
   </div>
 </div>
 <script type="text/javascript">
-
   $('#bt-send').on('click', function() {
-    var option=$('#text_msg').val();
-    if(option != '') {
+    var  current_menu=$('#option').val();
+    var current_sub_menu=$('#text_msg').val();
+    var menu = new Object();
+    var method='';
+
+    var avatar='';
+    avatar='<div class="alinea-icon-avatar">';
+    avatar +='<img id="Bot2" src="{{ imgbot }}" class="icon-agente image-message-agent margin-agent-chat">';
+    avatar +='</div>';
+
+    var text_not_undertand='';
+    text_not_undertand +=avatar;
+    text_not_undertand +='<div class="alinea-div-avatar">{{ msg_not_undertand }}</div>';
+    text_not_undertand +='<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
+    text_not_undertand +='<br>';
+
+    if(current_sub_menu != '') {
       msg_user = '';
-      msg_user += '<p class="color-text-client message-client-end-client">' + option + '</p>';
+      msg_user += '<p class="color-text-client message-client-end-client">' + current_sub_menu + '</p>';
       msg_user += '<p id="timeme2" class="text-time text-time-right">{{ current_time }}</p>';
       msg_user += '<br>';
       $('#account').append(msg_user);
     }
 
-    method='';
-    avatar='<div class="alinea-icon-avatar">';
-    avatar +='<img id="Bot2" src="{{ imgbot }}" class="icon-agente image-message-agent margin-agent-chat">';
-    avatar +='</div>';
+    if(current_menu=="home"){
+      menu.home=new Object();
+      menu.home.sub_option_1="getDocument";
+      menu.home.sub_option_2="closeChat";
 
-    if(option==1){
-      method='generatePdfAccount';
-    }else if(option==2){
-      method='closeChat';
-    }else if(option != '') {
-      method='none';
-      textdate = '<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
+      var current_option_msg='<div class="alinea-icon-avatar">';
+      current_option_msg +='<img id="Bot2" src="{{ imgbot }}" class="icon-agente image-message-agent margin-agent-chat">';
+      current_option_msg +='</div>';
+      current_option_msg +='<div class="alinea-div-avatar">';
+      current_option_msg +='<div class="border-first"><span class="color-text-bot container-messages-client margin-agent-chat">';
+      current_option_msg +='{{text_welcome_p4}}';
+      current_option_msg +='           </span><br>';
+      current_option_msg +="   <span>{{text_welcome_p5}}</span><br>";
+      current_option_msg +='    <span>{{text_welcome_p6}}</span>';
+      current_option_msg +='  </div>';
+      current_option_msg +='</div>';
+      current_option_msg +='<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
 
-      $('#account').append(avatar+'<div class="alinea-div-avatar">{{ msg_not_undertand }}</div>'+textdate);
-
+      if(current_sub_menu==1) {
+        method=menu.home.sub_option_1;
+      }else if(current_sub_menu==2){
+        method=menu.home.sub_option_2;
+      }else if(current_sub_menu != 1 || current_sub_menu !=2) {
+        method = 'none';
+        $('#account').append(text_not_undertand);
+        $('#account').append(current_option_msg);
+        $('#text_msg').val('');
+      }
+    }else if(current_menu=="getdocument") {
+      var documento_user = $('#text_msg').val();
+      menu.getdocument = new Object();
+      menu.getdocument.sub_option_1 = "generatePdfAccount";
+      if (documento_user != '') {
+        method = menu.getdocument.sub_option_1+"&&user_document="+documento_user;
+      }
     }
+
     if(method !='' && method !='none') {
       $.ajax({
-        url: "index.php?route=common/home."+method+"&&language={{ language }}",
+        url: "index.php?route=common/home." + method + "&&language={{ language }}",
         dataType: 'json',
         success: function (result) {
           $('#text_msg').val('');
-          if(result.ruta_dowload) {
-            textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
-            link_dowload = '<div class="alinea-div-avatar">';
-            link_dowload += '<a target="_blank" href="' + result.ruta_dowload + '" data-bs-toggle="tooltip" class="btn btn-warning" aria-label="Edit" data-bs-original-title="Edit">';
-            link_dowload += '<i class="fa-solid fa-file-pdf"></i>{{ btn_dowload }}';
-            link_dowload += '</a>';
-            link_dowload += '</div>';
-            $('#account').append(avatar + link_dowload + textdate);
-          }else if(result.msg_bye){
-            textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
-            $('#account').append(avatar + result.msg_bye + textdate);
+          if (current_menu == "home"){
+            if(result.msg_request_document){
+              var msg_bot='';
+              msg_bot +='<div class="alinea-div-avatar">';
+              msg_bot +='<div class="border-first"><span class="color-text-bot container-messages-client margin-agent-chat">';
+              msg_bot +=result.msg_request_document;
+              msg_bot +='           </span><br>';
+              msg_bot +='  </div>';
+              msg_bot +='</div>';
+              msg_bot +='<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
+              $('#account').append(avatar + msg_bot);
+            }
+
+            if (result.msg_bye) {
+              textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
+              $('#account').append(avatar + result.msg_bye + textdate);
+            }
+            if(result.option) {
+              $('#option').val(result.option);
+            }
+        }else if(current_menu == "getdocument"){
+            if (result.ruta_dowload) {
+              textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
+              link_dowload = '<div class="alinea-div-avatar">';
+              link_dowload += '<a target="_blank" href="' + result.ruta_dowload + '" data-bs-toggle="tooltip" class="btn btn-warning" aria-label="Edit" data-bs-original-title="Edit">';
+              link_dowload += '<i class="fa-solid fa-file-pdf"></i>{{ btn_dowload }}';
+              link_dowload += '</a>';
+              link_dowload += '</div>';
+              $('#account').append(avatar + link_dowload + textdate);
+            }
           }
-        }
+      }
       });
     }
   });

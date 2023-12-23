@@ -35,6 +35,7 @@ class Home extends \Opencart\System\Engine\Controller {
 		$data['btn_dowload']=$this->language->get('text_btn_dowload');
 		$data['msg_not_undertand']=$this->language->get('text_not_undertand');
 		$data['current_time']=date('h:i:s A');
+		$data['option']="home";
 
 		$this->response->setOutput($this->load->view('common/home', $data));
 	}
@@ -57,26 +58,41 @@ class Home extends \Opencart\System\Engine\Controller {
 		$this->load->language('owner/account_status');
 		$this->load->model('owner/account_status');
 		date_default_timezone_set($this->config->get('date_timezone'));
+
 		//var_dump($this->load->model('owner/account_status'));
 		$filter_data=[];
-		$owner = $this->model_owner_account_status->getAccount(1);
+		$user_document=$this->request->get['user_document'];
+		$owner = $this->model_owner_account_status->getAccount($user_document);
 
 		$data=[];
-		$data['account']['date']= date('d/m/Y');
-		$data['account']['owner_name']= $owner['owner_name'];
-		$data['account']['owner_name']= $owner['owner_name'];
-		$data['account']['balance']= $this->currency->format($owner['balance'], $this->config->get('config_currency'));
-		$data['account']['document_number']= $owner['document_number'];
-		$data['content']=$this->load->view('owner/tpl_pdf', $data);
-		$data['name_document']=$owner['owner_name'].$owner['document_number'];
-		$this->pdf->generateDocument($data);
+		$data_response = [];
+		$data_response['current_time'] = date('h:i:s A');
+		if($owner) {
+			$data['account']['date'] = date('d/m/Y');
+			$data['account']['owner_name'] = $owner['owner_name'];
+			$data['account']['owner_name'] = $owner['owner_name'];
+			$data['account']['balance'] = $this->currency->format($owner['balance'], $this->config->get('config_currency'));
+			$data['account']['document_number'] = $owner['document_number'];
+			$data['content'] = $this->load->view('owner/tpl_pdf', $data);
+			$data['name_document'] = $owner['owner_name'] . $owner['document_number'];
+			$this->pdf->generateDocument($data);
 
-		$data_response=[];
-		$data_response['current_time']=date('h:i:s A');
-		$data_response['ruta_dowload']=HTTP_SERVER.'documents/'.$data['name_document'].'.pdf';
+			$data_response['ruta_dowload'] = HTTP_SERVER . 'documents/' . $data['name_document'] . '.pdf';
+		}else{
+			$data['error'] = $this->language->get('txt_error_no_document');
+		}
 		$this->response->setOutput(json_encode($data_response));
 	}
 
+	public function getDocument(){
+		$this->load->language('common/home');
+		date_default_timezone_set($this->config->get('date_timezone'));
+		$data=[];
+		$data['msg_request_document']=$this->language->get('msg_request_document');
+		$data['option']="getdocument";
+		$data_response['current_time']=date('h:i:s A');
+		$this->response->setOutput(json_encode($data));
+	}
 	public function closeChat(): void
 	{
 		$this->load->language('common/home');
@@ -84,6 +100,7 @@ class Home extends \Opencart\System\Engine\Controller {
 		$data=[];
 		$data['msg_bye']=$this->language->get('text_bye');
 		$data['current_time']=date('h:i:s A');
+		$data['option']="close";
 		$this->response->setOutput(json_encode($data));
 	}
 }

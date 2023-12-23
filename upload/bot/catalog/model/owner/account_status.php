@@ -15,8 +15,8 @@ class AccountStatus extends \Opencart\System\Engine\Model {
 		return $query->rows;
 	}
 
-	public function getAccount(int $account_id): array {
-		$sql = "SELECT * FROM `" . DB_PREFIX . "account_status` p  WHERE account_id=1";
+	public function getAccount(int $user_document): array {
+		$sql = "SELECT * FROM `" . DB_PREFIX . "account_status` p  WHERE document_number=".$user_document;
 
 		$query = $this->db->query($sql);
 
