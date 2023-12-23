@@ -1,0 +1,114 @@
+{{ header }}
+<div id="account-register" class="container form-bot">
+
+  <div class="row">
+    <div id="content" class="col-11">
+      <form id="form-register" action="{{ register }}" method="post" data-oc-toggle="ajax">
+        <fieldset id="account">
+
+            <div class="alinea-icon-avatar">
+               <img id="Bot2" src="{{ imgbot }}" class="icon-agente image-message-agent margin-agent-chat">
+            </div>
+            {{ text_welcome }}
+            <p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>
+
+
+        </fieldset>
+
+
+
+
+      </form>
+    </div>
+
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <div class="form-control-inline col-9">
+        <label class="form-check-label">{{ text_agree }}</label> <input type="text" name="text_msg"  id="text_msg"  class="form-control"/>
+      </div>
+
+      <button type="submit" id="bt-send" class="btn btn-primary bt-sent-chat col-2">{{ button_continue }}</button>
+      <input type="hidden" name="document_user"  id="document_user" />
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+
+  $('#bt-send').on('click', function() {
+    var option=$('#text_msg').val();
+    if(option != '') {
+      msg_user = '';
+      msg_user += '<p class="color-text-client message-client-end-client">' + option + '</p>';
+      msg_user += '<p id="timeme2" class="text-time text-time-right">{{ current_time }}</p>';
+      msg_user += '<br>';
+      $('#account').append(msg_user);
+    }
+
+    method='';
+    avatar='<div class="alinea-icon-avatar">';
+    avatar +='<img id="Bot2" src="{{ imgbot }}" class="icon-agente image-message-agent margin-agent-chat">';
+    avatar +='</div>';
+
+    if(option==1){
+      method='generatePdfAccount';
+    }else if(option==2){
+      method='closeChat';
+    }else if(option != '') {
+      method='none';
+      textdate = '<p id="timeBot2" class="text-time text-time-solo">{{ current_time }}</p>';
+
+      $('#account').append(avatar+'<div class="alinea-div-avatar">{{ msg_not_undertand }}</div>'+textdate);
+
+    }
+    if(method !='' && method !='none') {
+      $.ajax({
+        url: "index.php?route=common/home."+method+"&&language={{ language }}",
+        dataType: 'json',
+        success: function (result) {
+          $('#text_msg').val('');
+          if(result.ruta_dowload) {
+            textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
+            link_dowload = '<div class="alinea-div-avatar">';
+            link_dowload += '<a target="_blank" href="' + result.ruta_dowload + '" data-bs-toggle="tooltip" class="btn btn-warning" aria-label="Edit" data-bs-original-title="Edit">';
+            link_dowload += '<i class="fa-solid fa-file-pdf"></i>{{ btn_dowload }}';
+            link_dowload += '</a>';
+            link_dowload += '</div>';
+            $('#account').append(avatar + link_dowload + textdate);
+          }else if(result.msg_bye){
+            textdate = '<p id="timeBot2" class="text-time text-time-solo">' + result.current_time + '</p>';
+            $('#account').append(avatar + result.msg_bye + textdate);
+          }
+        }
+      });
+    }
+  });
+
+  <!--
+  $('#input-customer-group').on('change', function() {
+    $.ajax({
+      url: 'index.php?route=account/custom_field&customer_group_id=' + this.value + '&language={{ language }}',
+      dataType: 'json',
+      success: function(json) {
+        $('.custom-field').hide();
+        $('.custom-field').removeClass('required');
+
+        for (i = 0; i < json.length; i++) {
+          custom_field = json[i];
+
+          $('.custom-field-' + custom_field['custom_field_id']).show();
+
+          if (custom_field['required']) {
+            $('.custom-field-' + custom_field['custom_field_id']).addClass('required');
+          }
+        }
+      },
+      error: function(xhr, ajaxOptions, thrownError) {
+        console.log(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+      }
+    });
+  });
+
+  $('#input-customer-group').trigger('change');
+  //--></script>
+{{ footer }}
