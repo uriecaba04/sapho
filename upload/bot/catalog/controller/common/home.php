@@ -35,7 +35,7 @@ class Home extends \Opencart\System\Engine\Controller {
 		$data['btn_dowload']=$this->language->get('text_btn_dowload');
 		$data['msg_not_undertand']=$this->language->get('text_not_undertand');
 		$data['current_time']=date('h:i:s A');
-		$data['option']="home";
+		$data['option']="getdocument";
 
 		$this->response->setOutput($this->load->view('common/home', $data));
 	}
@@ -49,7 +49,28 @@ class Home extends \Opencart\System\Engine\Controller {
 		$this->response->setOutput(json_encode($data));
 	}
 
+	public function  getMsgWelcome(): void{
+		$this->load->model('owner/account_status');
+		$this->load->language('common/home');
+		date_default_timezone_set($this->config->get('date_timezone'));
+		$user_document=$this->request->get['user_document'];
+		$owner = $this->model_owner_account_status->getAccount($user_document);
+
+		$data=[];
+		$owner_name='';
+		if($owner) {
+			$owner_name= $owner['owner_name'];
+			$data['msg_welcome']=$this->language->get('text_welcome_sub_1').$owner_name;
+		}else{
+			$data['error'] = $this->language->get('txt_error_no_document');
+		}
+
+		$data['current_time']=date('h:i:s A');
+		$this->response->setOutput(json_encode($data));
+	}
+
 	public function getMsgDocuemnt(): void{
+		$this->load->model('owner/account_status');
 		$this->load->language('common/home');
 		$data['msg_request_document']=$this->language->get('text_request_document');
 		$this->response->setOutput(json_encode($data));

@@ -3,11 +3,11 @@
 define('APPLICATION', 'Catalog');
 
 // HTTP
-define('HTTP_SERVER', 'http://localhost/sapho/upload/bot/');
+define('HTTP_SERVER', 'http://localhost/sapho/upload/botv1/');
 //define('HTTP_SERVER', 'http://192.168.0.14/sapho/upload/bot/');
 
 // DIR
-define('DIR_OPENCART', 'C:/xampp/htdocs/sapho/upload/bot/');
+define('DIR_OPENCART', 'C:/xampp/htdocs/sapho/upload/botv1/');
 define('DIR_MATER', 'C:/xampp/htdocs/sapho/upload/');
 define('DIR_APPLICATION', DIR_OPENCART . 'catalog/');
 define('DIR_EXTENSION', DIR_OPENCART . 'extension/');

@@ -11,10 +11,8 @@
             </div>
           <div class="alinea-div-avatar">
             <div class="border-first"><span class="color-text-bot container-messages-client margin-agent-chat">
-                   ✏️ <b>{{text_welcome_p1}}</b> {{text_welcome_p2}}<b> {{text_welcome_p3}}</b> {{text_welcome_p4}}
+                   ✏️ <b>{{text_welcome_p1}}</b> {{text_welcome_p2}}<b> {{text_welcome_p3}}</b>
                  </span><br>
-              <span>{{text_welcome_p5}}</span><br>
-              <span>{{text_welcome_p6}}</span>
               <!-- <a class="btn btn-chat-bot btn-chat-bot-act options-register-user btnDesactivado" data-guid-btn="6ee92dbe-cf47-4df2-92cb-57b2f92f73e1" data-title="Tienda" disabled="disabled">Tienda</a> -->
             </div>
           </div>
@@ -103,10 +101,11 @@
         $('#account').append(current_option_msg);
         $('#text_msg').val('');
       }
-    }else if(current_menu=="getdocument") {
+    }else if(current_menu=="getdocument") {//getmsgwelcome
       var documento_user = $('#text_msg').val();
       menu.getdocument = new Object();
-      menu.getdocument.sub_option_1 = "generatePdfAccount";
+      //menu.getdocument.sub_option_1 = "generatePdfAccount";
+      menu.getdocument.sub_option_1 = "getMsgWelcome";
       if (documento_user != '') {
         method = menu.getdocument.sub_option_1+"&&user_document="+documento_user;
       }

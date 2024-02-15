@@ -2,11 +2,13 @@
 // Text
 $_['text_welcome_p1']='Hola!';
 $_['text_welcome_p2']='🤗, Es un placer estar contigo el día de hoy,';
-$_['text_welcome_p3']='En qué te puedo colaborar?';
-$_['text_welcome_p4']='😀 Selecciona una de las siguientes opciones(Escribe el número):';
-$_['text_welcome_p5']='1.Descargar Cuenta de administracion';
-$_['text_welcome_p6']='2.Salir';
+$_['text_welcome_p3']='😀 Por favor ingresa tu documento para poderte colaborar:';
 
+$_['text_welcome_p4_']='😀 Selecciona una de las siguientes opciones(Escribe el número):';
+$_['text_welcome_p5_']='1.Descargar Cuenta de administracion';
+$_['text_welcome_p6_']='2.Salir';
+
+$_['text_welcome_sub_1']='Bienvenid@, ';
 
 $_['text_not_undertand']='🥺, Lo siento, eso no lo entiendo.';
 $_['text_btn_dowload']='Descargar cuenta';
